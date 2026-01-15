@@ -1,0 +1,11 @@
+-------------------------------------------------------------------------------
+Test set: TestSuite
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 19.36 s <<< FAILURE! -- in TestSuite
+com.testautomation.hybrid.runners.TestRunner.runScenario["Valid user should login successfully", "SauceDemo Login"](1) -- Time elapsed: 0.245 s <<< FAILURE!
+java.lang.NullPointerException: Cannot invoke "org.openqa.selenium.WebDriver.findElement(org.openqa.selenium.By)" because "this.driver" is null
+	at com.testautomation.hybrid.pages.LoginPage.enterUsername(LoginPage.java:21)
+	at com.testautomation.hybrid.pages.LoginPage.login(LoginPage.java:33)
+	at com.testautomation.hybrid.stepdefinitions.LoginSteps.user_enters_and(LoginSteps.java:24)
+	at ✽.user enters "standard_user" and "secret_sauce"(file:///C:/Users/ADMIN/eclipse-workspace/HybridAutomationFramework/src/test/resources/features/login.feature:6)
+
