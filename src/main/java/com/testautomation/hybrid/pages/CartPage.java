@@ -2,6 +2,8 @@ package com.testautomation.hybrid.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement; // Added this missing import
+import org.openqa.selenium.JavascriptExecutor; // Added for cleaner JS calls
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
@@ -26,38 +28,20 @@ public class CartPage {
         }
     }
 
-    public boolean isProductVisible(String productName){
+    public boolean isProductVisible(String productName) {
         try {
-            pause(1000);
-            
             System.out.println("Looking for product in cart: " + productName);
             
-            // Primary XPath - using inventory_item_name class
-            boolean isVisible = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.xpath("//div[@class='inventory_item_name' and text()='" + productName + "']"))
-            ).isDisplayed();
+            // Use normalize-space() to be resilient against extra spaces or newlines
+            By productLocator = By.xpath("//div[@class='inventory_item_name' and normalize-space()='" + productName + "']");
+            
+            boolean isVisible = wait.until(ExpectedConditions.visibilityOfElementLocated(productLocator)).isDisplayed();
             
             System.out.println("Product found: " + productName);
-            pause(500);
             return isVisible;
-            
-        } catch(Exception e){
-            System.out.println("Product NOT found using primary XPath, trying fallback...");
-            
-            // Fallback XPath
-            try {
-                boolean isVisible = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                    By.xpath("//div[contains(@class,'cart_item')]//div[contains(text(),'" + productName + "')]"))
-                ).isDisplayed();
-                
-                System.out.println("Product found with fallback: " + productName);
-                return isVisible;
-                
-            } catch(Exception ex) {
-                System.out.println("Product NOT found: " + productName);
-                ex.printStackTrace();
-                return false;
-            }
+        } catch (Exception e) {
+            System.out.println("Product NOT found: " + productName + ". Current URL: " + driver.getCurrentUrl());
+            return false;
         }
     }
 
@@ -83,5 +67,25 @@ public class CartPage {
             By.className("shopping_cart_link")
         )).click();
         pause(1500);
+    }
+
+    public void removeProduct(String productName) {
+        String removeBtnId = "remove-" + productName.toLowerCase().replace(" ", "-");
+        wait.until(ExpectedConditions.elementToBeClickable(By.id(removeBtnId))).click();
+        pause(1000);
+        System.out.println("Removed product: " + productName);
+    }
+    
+    public void clickCheckout() {
+        System.out.println("Attempting to click Checkout button...");
+        WebElement checkoutBtn = wait.until(ExpectedConditions.elementToBeClickable(By.id("checkout")));
+        
+        // Use JavaScript click to ensure the navigation triggers even if elements overlap
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].click();", checkoutBtn);
+        
+        // Wait for the URL to change to step one of checkout to confirm navigation
+        wait.until(ExpectedConditions.urlContains("checkout-step-one.html"));
+        System.out.println("Successfully navigated to Checkout Information page.");
     }
 }

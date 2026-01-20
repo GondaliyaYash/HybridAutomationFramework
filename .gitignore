@@ -1,0 +1,23 @@
+# Maven
+target/
+
+# TestNG reports
+test-output/
+
+# Extent reports
+reports/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IntelliJ / Eclipse
+.classpath
+.project
+.settings/
+
+# Compiled class files
+*.class

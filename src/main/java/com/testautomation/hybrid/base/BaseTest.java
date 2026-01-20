@@ -1,33 +1,40 @@
 package com.testautomation.hybrid.base;
 
 import java.time.Duration;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+
+import com.testautomation.hybrid.config.ConfigReader;
 import com.testautomation.hybrid.drivers.DriverFactory;
 
 public class BaseTest {
 
-    public static WebDriver driver; // ← static so Listener can access
-    protected DriverFactory driverFactory;
+    public static WebDriver driver; // static → Listener access
     protected WebDriverWait wait;
+    protected DriverFactory driverFactory;
 
     @BeforeMethod
     public void setUp() {
         driverFactory = new DriverFactory();
-        driver = driverFactory.initDriver(); // same driver instance
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        // Initialize driver based on config.properties
+        driver = driverFactory.initDriver();
+
+        // Explicit wait from config
+        wait = new WebDriverWait(
+            driver,
+            Duration.ofSeconds(ConfigReader.getExplicitWait())
+        );
+
+        // Navigate to application URL
+        driver.get(ConfigReader.getURL());
     }
 
     @AfterMethod
     public void tearDown() {
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         if (driver != null) {
             driver.quit();
         }

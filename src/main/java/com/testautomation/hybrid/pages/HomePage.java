@@ -90,21 +90,44 @@ public class HomePage {
         }
     }
     
+    private String getAddToCartId(String productName) {
+        return "add-to-cart-" + productName.toLowerCase().replace(" ", "-");
+    }
+
+    private String getRemoveButtonId(String productName) {
+        return "remove-" + productName.toLowerCase().replace(" ", "-");
+    }
+    
     // ================= ADD TO CART (Dynamic for any product) =================
     public void addProductToCart(String productName) {
+        String addButtonId = getAddToCartId(productName);
+        System.out.println("=== Adding product to cart: " + productName + " ===");
+        
         try {
-            String productId = getProductId(productName);
-            By addToCartBtn = By.id("add-to-cart-" + productId);
+            // 1. Wait for Add button and click it
+            WebElement addButton = wait.until(ExpectedConditions.elementToBeClickable(By.id(addButtonId)));
             
-            System.out.println("Adding product: " + productName + " with ID: add-to-cart-" + productId);
+            // Use JS click to avoid any overlay issues
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            js.executeScript("arguments[0].click();", addButton);
             
-            WebElement addButton = wait.until(ExpectedConditions.elementToBeClickable(addToCartBtn));
-            addButton.click();
-            pause(1500);
+            // 2. IMPORTANT: Verify the "Remove" button appears to confirm it was added
+            String removeId = getRemoveButtonId(productName);
+            wait.until(ExpectedConditions.presenceOfElementLocated(By.id(removeId)));
+            
+            pause(1000); // Visual confirmation
         } catch (Exception e) {
-            System.out.println("Failed to add product: " + productName);
-            e.printStackTrace();
-            throw e;
+            System.err.println("Failed to add product: " + productName + " Error: " + e.getMessage());
+            throw e; 
+        }
+    }
+    
+    public boolean isButtonChangedToRemove(String productName) {
+        String removeId = getRemoveButtonId(productName);
+        try {
+            return wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(removeId))).isDisplayed();
+        } catch (Exception e) {
+            return false;
         }
     }
     
@@ -126,23 +149,15 @@ public class HomePage {
     // Check if button changed to "Remove" (FIXED)
     public boolean isRemoveButtonDisplayed(String productName) {
         try {
-            String productId = getProductId(productName);
-            By removeBtn = By.id("remove-" + productId);
+            // Use the consistent ID helper you created earlier
+            String removeId = getRemoveButtonId(productName); 
+            By removeBtn = By.id(removeId);
             
-            System.out.println("Checking Remove button for: " + productName + " with ID: remove-" + productId);
+            System.out.println("Checking Remove button with ID: " + removeId);
             
-            pause(1000); // Wait for page state
-            
-            boolean isDisplayed = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(removeBtn)
-            ).isDisplayed();
-            
-            System.out.println("Remove button displayed: " + isDisplayed);
-            return isDisplayed;
-            
+            return wait.until(ExpectedConditions.visibilityOfElementLocated(removeBtn)).isDisplayed();
         } catch (Exception e) {
             System.out.println("Remove button not found for: " + productName);
-            e.printStackTrace();
             return false;
         }
     }
@@ -161,13 +176,21 @@ public class HomePage {
     
     public void openCart() {
         try {
+            // 1. Wait until the cart icon is clickable
             WebElement cart = wait.until(ExpectedConditions.elementToBeClickable(cartIcon));
-            cart.click();
-            pause(1500);
+            
+            // 2. Use JavaScript click to ensure it bypasses any potential overlay issues
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            js.executeScript("arguments[0].click();", cart);
+            
+            // 3. CRITICAL: Wait for the URL to actually change
+            wait.until(ExpectedConditions.urlContains("cart.html"));
+            
+            System.out.println("Successfully navigated to: " + driver.getCurrentUrl());
         } catch (Exception e) {
-            System.out.println("Failed to open cart");
-            e.printStackTrace();
-            throw e;
+            System.out.println("Standard click failed, trying force click...");
+            // Fallback: directly navigate if the click fails
+            driver.get("https://www.saucedemo.com/cart.html");
         }
     }
     

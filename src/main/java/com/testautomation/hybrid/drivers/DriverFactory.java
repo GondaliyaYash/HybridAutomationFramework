@@ -1,35 +1,40 @@
 package com.testautomation.hybrid.drivers;
 
+import java.time.Duration;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import com.testautomation.hybrid.config.ConfigReader;
 
-import java.time.Duration;
-
 public class DriverFactory {
 
     private WebDriver driver;
-    private ConfigReader config;
 
     public WebDriver initDriver() {
-        config = new ConfigReader();
-        String browser = config.getBrowser();
+
+        String browser = ConfigReader.getBrowser();
 
         if (browser.equalsIgnoreCase("chrome")) {
-            // Selenium 4.6+ will handle the path automatically!
             driver = new ChromeDriver();
-        } else if (browser.equalsIgnoreCase("firefox")) {
+        } 
+        else if (browser.equalsIgnoreCase("firefox")) {
             driver = new FirefoxDriver();
+        } 
+        else {
+            throw new RuntimeException("Invalid browser value in config.properties: " + browser);
         }
 
-        if (driver != null) {
-            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-            driver.manage().window().maximize();
-            driver.get(config.getURL());
-        }
-        
+        driver.manage().timeouts().implicitlyWait(
+            Duration.ofSeconds(Long.parseLong(ConfigReader.getProperty("implicitWait")))
+        );
+
+        driver.manage().window().maximize();
+
+        // ✅ REQUIRED for Cucumber framework
+        driver.get(ConfigReader.getURL());
+
         return driver;
     }
 }

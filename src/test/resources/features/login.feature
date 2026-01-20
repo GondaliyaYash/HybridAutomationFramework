@@ -1,9 +1,11 @@
-@smoke
+@smoke @login
 Feature: SauceDemo Login
 
-  Scenario: Valid user should login successfully using Excel data
+  Scenario Outline: Valid user login using scenario outline
     Given user is on login page
-    When user enters valid credentials from excel
+    When user logs in with "<username>" and "<password>"
     Then user should be redirected to home page
-    Then take manual screenshot
-    
+
+    Examples:
+      | username      | password     |
+      | standard_user | secret_sauce |

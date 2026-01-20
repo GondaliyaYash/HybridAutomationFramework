@@ -68,16 +68,18 @@ public class AddToCartSteps {
         homePage = new HomePage(driver); 
         cartPage = new CartPage(driver);
         
-        // Explicitly open cart
-        homePage.openCart();
+        // 1. Navigate to cart if we are not there
+        if (!driver.getCurrentUrl().contains("cart.html")) {
+            System.out.println("Currently on " + driver.getCurrentUrl() + ". Moving to Cart...");
+            homePage.openCart();
+        }
         
-        // Perform Assertion
-        Assert.assertTrue(cartPage.isProductVisible(productName),
-            "Product '" + productName + "' not visible in cart!");
+        // 2. Perform Assertion
+        boolean isVisible = cartPage.isProductVisible(productName);
+        Assert.assertTrue(isVisible, "Product '" + productName + "' not visible in cart!");
         
-        // Instead of navigate().back(), explicitly go to the inventory URL to be safe
-        driver.get("https://www.saucedemo.com/inventory.html"); 
-        System.out.println("=== Force returned to Inventory Page ===");
+        // IMPORTANT: DO NOT navigate back to inventory here. 
+        // Stay in the cart so the next product check can see the list.
     }
 
     @Then("{string} add button should change to {string}")
