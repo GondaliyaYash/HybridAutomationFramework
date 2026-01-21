@@ -12,24 +12,20 @@ import com.testautomation.hybrid.drivers.DriverFactory;
 
 public class BaseTest {
 
-    public static WebDriver driver; // static → Listener access
+    public static WebDriver driver;
     protected WebDriverWait wait;
     protected DriverFactory driverFactory;
 
     @BeforeMethod
     public void setUp() {
         driverFactory = new DriverFactory();
-
-        // Initialize driver based on config.properties
         driver = driverFactory.initDriver();
 
-        // Explicit wait from config
         wait = new WebDriverWait(
             driver,
             Duration.ofSeconds(ConfigReader.getExplicitWait())
         );
 
-        // Navigate to application URL
         driver.get(ConfigReader.getURL());
     }
 

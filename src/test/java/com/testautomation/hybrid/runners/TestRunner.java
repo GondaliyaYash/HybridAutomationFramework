@@ -5,20 +5,20 @@ import io.cucumber.testng.CucumberOptions;
 import org.testng.annotations.DataProvider;
 
 @CucumberOptions(
-    features = "src/test/resources/features", // Req 4 path
-    glue = {"com.testautomation.hybrid.stepdefinitions", "com.testautomation.hybrid.hooks"}, 
+    features = "src/test/resources/features",  
+    glue = "com.testautomation.hybrid",
     plugin = {
         "pretty", 
         "html:target/cucumber-reports.html",
-        "com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:" // Links to Extent Report
+        "com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:" 
     },
-    tags = "@smoke or @e2e", // Matches your feature tags for Req 5
+    tags = "@smoke or @e2e or @filter or @regression",
     monochrome = true
 )
 public class TestRunner extends AbstractTestNGCucumberTests {
     
     @Override
-    @DataProvider(parallel = false) // Requirement 9 bonus point option
+    @DataProvider(parallel = false)
     public Object[][] scenarios() {
         return super.scenarios();
     }

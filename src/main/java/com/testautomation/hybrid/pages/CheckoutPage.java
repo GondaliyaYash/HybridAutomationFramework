@@ -53,10 +53,8 @@ public class CheckoutPage {
     }
 
     public void clickFinish() {
-        // Wait for overview page to be ready
         WebElement finish = wait.until(ExpectedConditions.elementToBeClickable(finishBtn));
         
-        // Scroll to it so you can see it highlight
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", finish);
         
         highlightAndSleep(finish);

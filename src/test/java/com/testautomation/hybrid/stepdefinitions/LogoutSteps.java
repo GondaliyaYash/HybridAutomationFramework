@@ -1,6 +1,5 @@
 package com.testautomation.hybrid.stepdefinitions;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 
@@ -25,15 +24,9 @@ public class LogoutSteps {
 
     @Then("user should be redirected to login page")
     public void verifyLogout() {
-        // GET THE ACTIVE DRIVER HERE
-        this.driver = DriverManager.getDriver(); 
-        
-        // Initialize the page object with the active driver
+        this.driver = DriverManager.getDriver();
         loginPage = new LoginPage(this.driver);
-        
         System.out.println("=== Verifying redirection to Login Page ===");
-        
-        // Now findElement won't throw NullPointerException
         Assert.assertTrue(loginPage.isUserOnLoginPage(), 
             "Logout failed! User is not on the login page.");
     }

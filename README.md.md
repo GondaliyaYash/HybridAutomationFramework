@@ -1,30 +1,57 @@
-\# Hybrid Automation Framework – SauceDemo
+======================================================================
+HYBRID AUTOMATION FRAMEWORK – SAUCEDEMO
+======================================================================
 
-\#\# Project Overview  
-This project demonstrates a Hybrid Test Automation Framework using Selenium, TestNG, Cucumber (BDD),  
-and Page Object Model (POM) to automate the SauceDemo web application.
+PROJECT OVERVIEW
+----------------
+This project is a high-performance Hybrid Test Automation Framework 
+designed for the SauceDemo web application. It combines Behavior-Driven 
+Development (BDD) with TestNG and Page Object Model (POM) to ensure 
+scalability, maintainability, and clear reporting.
 
-\#\# Tech Stack  
-\- Java  
-\- Maven  
-\- Selenium WebDriver  
-\- TestNG  
-\- Cucumber (BDD)  
-\- Apache POI (Excel Data Driven Testing)  
-\- Extent Reports  
-\- Log4j  
-\- GitHub
+TECH STACK
+----------
+- Language: Java 21
+- Build Tool: Maven
+- Web Automation: Selenium WebDriver
+- BDD Framework: Cucumber
+- Test Runner: TestNG
+- Design Pattern: Page Object Model (POM)
+- Apache POI (Excel Data Driven Testing)  
+- Extent Reports  
+- Log4j  
+- GitHub
 
-\#\# Application Under Test  
-SauceDemo    
-Automated Modules:  
-\- Login  
-\- Logout  
-\- Add to Cart  
-\- Checkout (In Progress)
+KEY MODULES & FEATURES
+----------------------
+1. SECURE LOGIN & LOGOUT
+   - Validates authentication and automated session termination.
+   - Tags: @smoke, @login, @logout
+
+2. SHOPPING CART MANAGEMENT
+   - Dynamic adding of products to the cart.
+   - Real-time verification of the cart badge count.
+   - Tags: @cart
+
+3. PRODUCT FILTER FUNCTIONALITY
+   - Tests sorting by: Name (A to Z), Name (Z to A), Price (Low to High), 
+     and Price (High to Low).
+   - Tags: @filter, @regression
+
+4. END-TO-END (E2E) CHECKOUT
+   - Full journey: Login -> Add to Cart -> Shipping Info -> Order Finish.
+   - Tags: @e2e, @checkout
 
 \#\# Framework Type  
 Hybrid Framework (BDD \+ TestNG \+ POM \+ Data Driven)
+
+HOW TO RUN TESTS
+----------------
+1. Via TestNG Runner:
+   Right-click 'TestRunner.java' -> Run as TestNG Test.
+
+2. Via Maven Command Line:
+   mvn test -Dcucumber.filter.tags="@regression"
 
 \#\# Folder Structure
 src/main/java
@@ -49,4 +76,5 @@ src/test/resources
 
 ## Framework Architecture Diagram
 ![Hybrid Automation Framework Architecture](docs/HybridFrameworkArchitecture.png)
+======================================================================
 

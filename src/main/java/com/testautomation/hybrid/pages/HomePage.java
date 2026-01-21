@@ -23,8 +23,9 @@ public class HomePage {
     private By popupOkBtn = By.id("password-modal-ok-button");
     private By cartIcon = By.className("shopping_cart_link");
     private By cartBadge = By.className("shopping_cart_badge");
+    private By filterDropdown = By.className("product_sort_container");
+
     
-    // Helper method for visible delays
     private void pause(int milliseconds) {
         try {
             Thread.sleep(milliseconds);
@@ -33,14 +34,10 @@ public class HomePage {
         }
     }
     
-    // Convert product name to ID format (FIXED)
     private String getProductId(String productName) {
-        // "Sauce Labs Backpack" -> "sauce-labs-backpack"
-        // "Sauce Labs Bike Light" -> "sauce-labs-bike-light"
         return productName.toLowerCase().replace(" ", "-");
     }
     
-    // ================= HOME PAGE =================
     public boolean isUserOnHomePage() {
         try {
             boolean isDisplayed = wait.until(
@@ -53,15 +50,13 @@ public class HomePage {
         }
     }
     
-    // ================= LOGOUT (FIXED) =================
+    // ================= LOGOUT =================
     public void logout() {
         try {
-            // Click menu button
             WebElement menuButton = wait.until(ExpectedConditions.elementToBeClickable(menuBtn));
             menuButton.click();
-            pause(1000); // Increased wait for menu to open
+            pause(1000); 
             
-            // Handle optional popup
             try {
                 WebDriverWait shortWait = new WebDriverWait(driver, Duration.ofSeconds(2));
                 WebElement popup = shortWait.until(ExpectedConditions.elementToBeClickable(popupOkBtn));
@@ -71,15 +66,12 @@ public class HomePage {
                 System.out.println("No popup found, continuing...");
             }
             
-            // Wait for logout link and click with JavaScript
             WebElement logoutElement = wait.until(ExpectedConditions.presenceOfElementLocated(logoutLink));
             
-            // Scroll into view first
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript("arguments[0].scrollIntoView(true);", logoutElement);
             pause(500);
             
-            // Click using JavaScript
             js.executeScript("arguments[0].click();", logoutElement);
             pause(1500);
             
@@ -98,24 +90,21 @@ public class HomePage {
         return "remove-" + productName.toLowerCase().replace(" ", "-");
     }
     
-    // ================= ADD TO CART (Dynamic for any product) =================
+    // ================= ADD TO CART  =================
     public void addProductToCart(String productName) {
         String addButtonId = getAddToCartId(productName);
         System.out.println("=== Adding product to cart: " + productName + " ===");
         
         try {
-            // 1. Wait for Add button and click it
             WebElement addButton = wait.until(ExpectedConditions.elementToBeClickable(By.id(addButtonId)));
             
-            // Use JS click to avoid any overlay issues
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript("arguments[0].click();", addButton);
             
-            // 2. IMPORTANT: Verify the "Remove" button appears to confirm it was added
             String removeId = getRemoveButtonId(productName);
             wait.until(ExpectedConditions.presenceOfElementLocated(By.id(removeId)));
             
-            pause(1000); // Visual confirmation
+            pause(1000);
         } catch (Exception e) {
             System.err.println("Failed to add product: " + productName + " Error: " + e.getMessage());
             throw e; 
@@ -131,7 +120,6 @@ public class HomePage {
         }
     }
     
-    // Get cart badge count
     public String getCartBadgeCount() {
         try {
             pause(500);
@@ -146,8 +134,7 @@ public class HomePage {
         }
     }
     
-    // Check if button changed to "Remove" (FIXED)
-    public boolean isRemoveButtonDisplayed(String productName) {
+   public boolean isRemoveButtonDisplayed(String productName) {
         try {
             // Use the consistent ID helper you created earlier
             String removeId = getRemoveButtonId(productName); 
@@ -176,20 +163,16 @@ public class HomePage {
     
     public void openCart() {
         try {
-            // 1. Wait until the cart icon is clickable
             WebElement cart = wait.until(ExpectedConditions.elementToBeClickable(cartIcon));
             
-            // 2. Use JavaScript click to ensure it bypasses any potential overlay issues
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript("arguments[0].click();", cart);
             
-            // 3. CRITICAL: Wait for the URL to actually change
             wait.until(ExpectedConditions.urlContains("cart.html"));
             
             System.out.println("Successfully navigated to: " + driver.getCurrentUrl());
         } catch (Exception e) {
             System.out.println("Standard click failed, trying force click...");
-            // Fallback: directly navigate if the click fails
             driver.get("https://www.saucedemo.com/cart.html");
         }
     }
@@ -201,4 +184,45 @@ public class HomePage {
         wait.until(ExpectedConditions.elementToBeClickable(removeBtn)).click();
         pause(1000);
     }
+ // ================= APPLY FILTER =================
+    public void applyFilter(String filterName) {
+        try {
+            WebElement dropdown = wait.until(
+                ExpectedConditions.elementToBeClickable(filterDropdown)
+            );
+
+            org.openqa.selenium.support.ui.Select select =
+                    new org.openqa.selenium.support.ui.Select(dropdown);
+
+            System.out.println("Applying filter: " + filterName);
+
+            switch (filterName) {
+                case "Name (A to Z)":
+                    select.selectByVisibleText("Name (A to Z)");
+                    break;
+
+                case "Name (Z to A)":
+                    select.selectByVisibleText("Name (Z to A)");
+                    break;
+
+                case "Price (low to high)":
+                    select.selectByVisibleText("Price (low to high)");
+                    break;
+
+                case "Price (high to low)":
+                    select.selectByVisibleText("Price (high to low)");
+                    break;
+
+                default:
+                    throw new RuntimeException("Invalid filter name: " + filterName);
+            }
+
+            pause(3000); 
+        } catch (Exception e) {
+            System.out.println("Failed to apply filter: " + filterName);
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
 }

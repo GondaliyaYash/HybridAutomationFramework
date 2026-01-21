@@ -20,13 +20,12 @@ public class ScreenshotUtils {
                     + testName + "_"
                     + System.currentTimeMillis() + ".png";
 
-            // Take screenshot
             File src = ((TakesScreenshot) driver)
                     .getScreenshotAs(OutputType.FILE);
 
             Files.copy(src.toPath(), Paths.get(filePath));
 
-            System.out.println("📸 Screenshot saved at: " + filePath);
+            System.out.println("Screenshot saved at: " + filePath);
 
             return filePath;
 

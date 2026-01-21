@@ -32,7 +32,6 @@ public class DriverFactory {
 
         driver.manage().window().maximize();
 
-        // ✅ REQUIRED for Cucumber framework
         driver.get(ConfigReader.getURL());
 
         return driver;

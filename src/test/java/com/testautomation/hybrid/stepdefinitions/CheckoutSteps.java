@@ -31,7 +31,7 @@ public class CheckoutSteps {
     @Then("{string} message should be displayed")
     public void message_should_be_displayed(String expectedMsg) {
         Assert.assertEquals(checkoutPage.getConfirmationMessage(), expectedMsg);
-        try { Thread.sleep(2000); } catch (InterruptedException e) {} // Final pause to see success
+        try { Thread.sleep(2000); } catch (InterruptedException e) {} 
     }
 
     @When("user clicks back home button")

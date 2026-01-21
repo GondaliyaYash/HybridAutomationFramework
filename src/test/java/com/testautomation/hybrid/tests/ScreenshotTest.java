@@ -11,19 +11,14 @@ public class ScreenshotTest {
 
     @Test
     public void testScreenshotOnly() {
-        // Initialize WebDriver
         WebDriver driver = new ChromeDriver();
         DriverManager.setDriver(driver);
 
-        // Open any website
         driver.get("https://www.google.com");
 
-        // Take screenshot
         String path = ScreenshotUtils.captureScreenshot(driver, "ManualTest");
         System.out.println("Screenshot saved at: " + path);
 
-        // Close driver
         driver.quit();
-//        DriverManager.unload();
     }
 }

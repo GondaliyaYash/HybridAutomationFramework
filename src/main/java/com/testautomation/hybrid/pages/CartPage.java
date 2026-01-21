@@ -32,7 +32,6 @@ public class CartPage {
         try {
             System.out.println("Looking for product in cart: " + productName);
             
-            // Use normalize-space() to be resilient against extra spaces or newlines
             By productLocator = By.xpath("//div[@class='inventory_item_name' and normalize-space()='" + productName + "']");
             
             boolean isVisible = wait.until(ExpectedConditions.visibilityOfElementLocated(productLocator)).isDisplayed();
@@ -80,11 +79,9 @@ public class CartPage {
         System.out.println("Attempting to click Checkout button...");
         WebElement checkoutBtn = wait.until(ExpectedConditions.elementToBeClickable(By.id("checkout")));
         
-        // Use JavaScript click to ensure the navigation triggers even if elements overlap
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].click();", checkoutBtn);
         
-        // Wait for the URL to change to step one of checkout to confirm navigation
         wait.until(ExpectedConditions.urlContains("checkout-step-one.html"));
         System.out.println("Successfully navigated to Checkout Information page.");
     }

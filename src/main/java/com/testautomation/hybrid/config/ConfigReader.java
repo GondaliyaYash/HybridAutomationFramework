@@ -8,7 +8,6 @@ public class ConfigReader {
 
     private static Properties prop;
 
-    // Static block → loads config once
     static {
         try {
             FileInputStream fis = new FileInputStream(
@@ -22,12 +21,10 @@ public class ConfigReader {
         }
     }
 
-    // Generic property reader (recommended)
     public static String getProperty(String key) {
         return prop.getProperty(key);
     }
 
-    // Specific getters (readability)
     public static String getBrowser() {
         return getProperty("browser");
     }

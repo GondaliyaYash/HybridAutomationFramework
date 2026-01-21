@@ -27,15 +27,13 @@ public class ExtentTestListener implements ITestListener {
 
     @Override
     public void onTestSuccess(ITestResult result) {
-        test.get().pass("✅ Test Passed");
+        test.get().pass("Test Passed");
     }
 
     @Override
     public void onTestFailure(ITestResult result) {
-        // Log failure
         test.get().fail(result.getThrowable());
 
-        // ✅ AUTO screenshot on failure
         if (DriverManager.getDriver() != null) {
 
             String screenshotPath =
