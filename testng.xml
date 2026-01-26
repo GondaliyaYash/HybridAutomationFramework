@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="HybridAutomationFrameworkSuite" parallel="false">
+
+    <test name="CucumberTests">
+        <classes>
+            <!-- Point to your TestRunner class -->
+            <class name="com.testautomation.hybrid.runners.TestRunner"/>
+        </classes>
+    </test>
+
+</suite>
